@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/HarrisonWAffel/tool-chain/profile"
 	"github.com/HarrisonWAffel/tool-chain/setup"
@@ -46,14 +45,14 @@ func main() {
 	if argCount != 0 {
 		for _, e := range commands {
 			if len(os.Args) <= 1 {
-				return
+				break
 			}
 			if os.Args[1] == e.Name {
 				e.handler()
 				break
 			}
 		}
-		return
 	}
-	flag.PrintDefaults()
+
+	fmt.Println(setup.BoxMessage("       Command Line Tool-Chain.     \n                                    \n The below commands are available:  \nprofile: manage environment profiles"))
 }
