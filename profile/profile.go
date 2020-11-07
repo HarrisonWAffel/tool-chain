@@ -85,6 +85,38 @@ func ActivateProfile(profileName string, c []string) {
 		panic(e)
 	}
 }
+func DeleteProfile(profileName string, c []string) {
+	var err error
+	if c == nil {
+		c, err = ReadExportFile()
+		if err != nil {
+			panic(err)
+		}
+	}
+	triggered := false
+	var newset []string
+	for _, t := range c {
+		if strings.Contains(t, Footer()) {
+			triggered = false
+		}
+		if strings.Contains(t, Header(profileName)) {
+			triggered = true
+		}
+		if !triggered {
+			newset = append(newset, t)
+		}
+	}
+	e := SaveExportFile(newset, false)
+	if e != nil {
+		fmt.Println(e)
+		panic(e)
+	}
+	e = UpdateConfig(cnf)
+	if e != nil {
+		fmt.Println(e)
+		panic(e)
+	}
+}
 
 func ListProfiles() []string {
 	c := config.ReadConfig()
@@ -104,11 +136,9 @@ func UpdateConfig(conf config.Config) error {
 		nil,
 	}
 	for _, e := range s {
-
-		for _, k := range conf.ProfileNames {
-			if strings.Contains(e, Header(k)) {
-				nc.ProfileNames = append(nc.ProfileNames, k)
-			}
+		if strings.Contains(e, strings.Split(Header(""), " ")[0]) {
+			name := strings.Split(e, " ")[1]
+			nc.ProfileNames = append(nc.ProfileNames, name)
 		}
 	}
 	return config.UpdateFile(nc)

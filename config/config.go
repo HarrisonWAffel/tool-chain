@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-
 	"io/ioutil"
 	"os"
 )
@@ -34,6 +33,12 @@ func UpdateFile(config Config) error {
 	}
 	configFile.Close()
 	return nil
+}
+
+func must(e error) {
+	if e != nil {
+		panic(e)
+	}
 }
 
 func ReadConfig() Config {

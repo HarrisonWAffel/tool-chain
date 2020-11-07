@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	config "github.com/HarrisonWAffel/tool-chain/config"
 	"github.com/HarrisonWAffel/tool-chain/profile"
 	"github.com/HarrisonWAffel/tool-chain/setup"
 	"os"
@@ -31,12 +32,27 @@ func main() {
 			case "activate":
 				profile.ActivateProfile(os.Args[3], nil)
 
+			case "remove":
+				curConf := config.ReadConfig()
+				err := profile.UpdateConfig(curConf)
+				if err != nil {
+					panic(err)
+				}
+
+				for _, e := range config.ReadConfig().ProfileNames {
+					if e == os.Args[3] {
+						profile.DeleteProfile(os.Args[3], nil)
+						fmt.Println("Profile " + os.Args[3] + " Has been deleted.")
+						return
+					}
+				}
+				fmt.Println("Profile " + os.Args[3] + " not found.")
+
 			case "list":
 				fmt.Print(profile.ListProfiles())
 
 			default:
 				fmt.Println("usage: \n create a new profile: tool-chain profile new profileName \n activate a profile: tool-chain profile activate profileName\n list all profiles: tool-chain profile list")
-				return
 			}
 		}},
 		{},
@@ -52,7 +68,7 @@ func main() {
 				break
 			}
 		}
+	} else {
+		fmt.Println(setup.BoxMessage("       Command Line Tool-Chain.     \n                                    \n The below commands are available:  \nprofile: manage environment profiles"))
 	}
-
-	fmt.Println(setup.BoxMessage("       Command Line Tool-Chain.     \n                                    \n The below commands are available:  \nprofile: manage environment profiles"))
 }
