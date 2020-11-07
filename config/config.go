@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"path"
+	"path/filepath"
+	"runtime"
 )
 
 type Config struct {
@@ -15,11 +18,11 @@ type Config struct {
 
 //UpdateFile updates the config.json file
 func UpdateFile(config Config) error {
-	err := os.Remove("config/config.json")
+	err := os.Remove(RootDir() + "/config/config.json")
 	if err != nil {
 		return err
 	}
-	configFile, err := os.OpenFile("config/config.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	configFile, err := os.OpenFile(RootDir()+"/config/config.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
@@ -42,11 +45,17 @@ func must(e error) {
 }
 
 func ReadConfig() Config {
-	content, err := ioutil.ReadFile("config/config.json")
+	content, err := ioutil.ReadFile(RootDir() + "/config/config.json")
 	if err != nil {
 		return Config{}
 	}
 	c := Config{}
 	json.Unmarshal(content, &c)
 	return c
+}
+
+func RootDir() string {
+	_, b, _, _ := runtime.Caller(0)
+	d := path.Join(path.Dir(b))
+	return filepath.Dir(d)
 }

@@ -8,6 +8,9 @@ import (
 	"github.com/HarrisonWAffel/tool-chain/profile"
 	"io/ioutil"
 	"os"
+	"path"
+	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -29,16 +32,13 @@ func EnsureBaseConfiguration() {
 func Prompt() {
 	fmt.Print(BoxMessage("Tool-Chain Setup"))
 	fmt.Println("\n Step 1. add exports file to zshrc. exports file will be generated at: " + config.ReadConfig().ExportPath)
-	wd, e := os.Getwd()
-	if e != nil {
-		panic(e)
-	}
+
 	nc := config.Config{
-		ExportPath:        wd + "/exports",
+		ExportPath:        RootDir() + "/exports",
 		CurrentAWSProfile: "",
 		ProfileNames:      nil,
 	}
-
+	fmt.Println(RootDir() + "/exports")
 	e2 := config.UpdateFile(nc)
 	if e2 != nil {
 		panic(e2)
@@ -164,8 +164,8 @@ func ReadFromUser(prompt, rePrompt string) string {
 //ConfigIsMissing ensures that config.json exists, creates it if necessary.
 // a boolean is returned indicating if the config.json file exists, and no changes were made
 func ConfigIsMissing() (bool, error) {
-	if !checkForFile("config/config.json") {
-		configFile, err := os.OpenFile("config/config.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if !checkForFile(config.RootDir() + "/config/config.json") {
+		configFile, err := os.OpenFile(config.RootDir()+"/config/config.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			return false, err
 		}
@@ -261,4 +261,10 @@ func checkForFile(filename string) bool {
 		return false
 	}
 	return true
+}
+
+func RootDir() string {
+	_, b, _, _ := runtime.Caller(0)
+	d := path.Join(path.Dir(b))
+	return filepath.Dir(d)
 }
