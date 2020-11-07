@@ -37,29 +37,6 @@ func AddProfile(profileName string, properties map[string]string, isFirstProfile
 	return UpdateConfig(cnf)
 }
 
-//checks current config against exports file
-//to flush any deleted profiles
-func UpdateConfig(conf config.Config) error {
-	s, e := ReadExportFile()
-	if e != nil {
-		panic(e)
-	}
-	nc := config.Config{
-		conf.ExportPath,
-		"",
-		nil,
-	}
-	for _, e := range s {
-
-		for _, k := range conf.ProfileNames {
-			if strings.Contains(e, Header(k)) {
-				nc.ProfileNames = append(nc.ProfileNames, k)
-			}
-		}
-	}
-	return config.UpdateFile(nc)
-}
-
 func ActivateProfile(profileName string, c []string) {
 	var err error
 	if c == nil {
@@ -107,4 +84,32 @@ func ActivateProfile(profileName string, c []string) {
 		fmt.Println(e)
 		panic(e)
 	}
+}
+
+func ListProfiles() []string {
+	c := config.ReadConfig()
+	return c.ProfileNames
+}
+
+//checks current config against exports file
+//to flush any deleted profiles
+func UpdateConfig(conf config.Config) error {
+	s, e := ReadExportFile()
+	if e != nil {
+		panic(e)
+	}
+	nc := config.Config{
+		conf.ExportPath,
+		"",
+		nil,
+	}
+	for _, e := range s {
+
+		for _, k := range conf.ProfileNames {
+			if strings.Contains(e, Header(k)) {
+				nc.ProfileNames = append(nc.ProfileNames, k)
+			}
+		}
+	}
+	return config.UpdateFile(nc)
 }

@@ -9,7 +9,7 @@ import (
 )
 
 type command struct {
-	Name string
+	Name    string
 	handler func()
 }
 
@@ -17,10 +17,10 @@ func main() {
 	setup.EnsureBaseConfiguration()
 	argCount := len(os.Args)
 	commands := []command{ //more commands can be added here
-		{Name:"profile", handler: func() {
+		{Name: "profile", handler: func() {
 			l := len(os.Args)
 			if l < 3 {
-				fmt.Println("usage: \n create a new profile: tool-chain profile new profileName \n activate a profile: tool-chain profile activate profileName")
+				fmt.Println("usage: \n create a new profile: tool-chain profile new profileName \n activate a profile: tool-chain profile activate profileName\n list all profiles: tool-chain profile list")
 				return
 			}
 
@@ -32,13 +32,16 @@ func main() {
 			case "activate":
 				profile.ActivateProfile(os.Args[3], nil)
 
+			case "list":
+				fmt.Print(profile.ListProfiles())
+
 			default:
-				fmt.Println("usage: \n create a new profile: tool-chain profile new profileName \n activate a profile: tool-chain profile activate profileName")
+				fmt.Println("usage: \n create a new profile: tool-chain profile new profileName \n activate a profile: tool-chain profile activate profileName\n list all profiles: tool-chain profile list")
 				return
 			}
-	}},
-	{},
-	{}}
+		}},
+		{},
+		{}}
 
 	if argCount != 0 {
 		for _, e := range commands {
