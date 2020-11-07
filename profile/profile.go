@@ -6,9 +6,8 @@ import (
 	"strings"
 )
 
-
 type profile struct {
-	Name string `json:"name"`
+	Name    string `json:"name"`
 	Exports map[string]string
 }
 
@@ -19,9 +18,7 @@ type profile struct {
 // ============================================
 //
 
-
 var cnf = config.ReadConfig()
-
 
 func AddProfile(profileName string, properties map[string]string, isFirstProfile bool) error {
 	c, e := ReadExportFile()
@@ -32,7 +29,7 @@ func AddProfile(profileName string, properties map[string]string, isFirstProfile
 	c = WriteProfileHeader(profileName, c)
 	c = WriteProfileProperties(properties, c)
 	c = WriteProfileFooter(c)
- 	e = SaveExportFile(c, isFirstProfile)
+	e = SaveExportFile(c, isFirstProfile)
 	if e != nil {
 		fmt.Println(e)
 		return e
@@ -50,7 +47,7 @@ func UpdateConfig(conf config.Config) error {
 	nc := config.Config{
 		conf.ExportPath,
 		"",
-			nil,
+		nil,
 	}
 	for _, e := range s {
 
@@ -63,7 +60,7 @@ func UpdateConfig(conf config.Config) error {
 	return config.UpdateFile(nc)
 }
 
-func ActivateProfile(profileName string, c []string){
+func ActivateProfile(profileName string, c []string) {
 	var err error
 	if c == nil {
 		c, err = ReadExportFile()
@@ -80,21 +77,22 @@ func ActivateProfile(profileName string, c []string){
 		if strings.Contains(t, Footer()) {
 			triggered = false
 		}
+
 		if triggered {
 			chars := strings.Split(t, "")
 			if len(chars) > 0 {
-				if chars[0] == "#" {
+				if chars[0] == "#" && (!strings.Contains(t, Footer()) && !strings.Contains(t, Header(profileName))) {
 					newset = append(newset, strings.ReplaceAll(t, "#", ""))
-				}else{
+				} else {
 					newset = append(newset, t)
 				}
 			}
 
 		}
 		if !triggered {
-			if strings.Contains(t, "#"){
+			if strings.Contains(t, "#") {
 				newset = append(newset, t)
-			}else{
+			} else {
 				newset = append(newset, "#"+t)
 			}
 		}
