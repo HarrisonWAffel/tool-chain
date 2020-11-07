@@ -24,7 +24,6 @@ func EnsureBaseConfiguration() {
 	}
 }
 
-
 //Prompt asks the user for the absolute path of their
 // zshrc/bashrc file
 func Prompt() {
@@ -35,7 +34,7 @@ func Prompt() {
 		panic(e)
 	}
 	nc := config.Config{
-		ExportPath:        wd+"/exports",
+		ExportPath:        wd + "/exports",
 		CurrentAWSProfile: "",
 		ProfileNames:      nil,
 	}
@@ -75,14 +74,14 @@ func Prompt() {
 			break
 		}
 		split := strings.Split(pro, "=")
-		var k,v string
+		var k, v string
 		k = split[0]
 		v = split[1]
 		props[k] = v
 	}
 
 	var first = false
-	if len(config.ReadConfig().ProfileNames)==0 {
+	if len(config.ReadConfig().ProfileNames) == 0 {
 		first = true
 	}
 
@@ -94,7 +93,6 @@ func Prompt() {
 	if e != nil {
 		panic(e)
 	}
-
 
 	profile.ActivateProfile(name, p)
 	fmt.Println("\n" + BoxMessage("Setup Complete!"))
@@ -110,14 +108,14 @@ func AddProfilePrompt(name string) {
 			break
 		}
 		split := strings.Split(pro, "=")
-		var k,v string
+		var k, v string
 		k = split[0]
 		v = split[1]
 		props[k] = v
 	}
 
 	var first = false
-	if len(config.ReadConfig().ProfileNames)==0 {
+	if len(config.ReadConfig().ProfileNames) == 0 {
 		first = true
 	}
 
@@ -169,7 +167,7 @@ func ConfigIsMissing() (bool, error) {
 	if !checkForFile("config/config.json") {
 		configFile, err := os.OpenFile("config/config.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			 return false, err
+			return false, err
 		}
 		emptyConfig := config.Config{}
 		j, e := json.Marshal(emptyConfig)
@@ -181,7 +179,7 @@ func ConfigIsMissing() (bool, error) {
 			return false, err
 		}
 		return true, nil
-	}else{
+	} else {
 		return false, nil
 	}
 }
@@ -192,30 +190,33 @@ func AddConfigToRC(rcFilePath string) error {
 		panic(e)
 	}
 
-	_, e = f.WriteString("sh "+ config.ReadConfig().ExportPath+"\n")
+	_, e = f.WriteString("source " + config.ReadConfig().ExportPath + "\n")
 	if e != nil {
 		panic(e)
 	}
 	return e
 }
 
-func RCHasConfig(rcFilePath string) (bool,error) {
+func RCHasConfig(rcFilePath string) (bool, error) {
 	l, err := ioutil.ReadFile(rcFilePath)
 	if err != nil {
 		return false, err
 	}
 	lines := strings.Split(string(l), "\n")
-	added := fmt.Sprintf("sh "+config.ReadConfig().ExportPath)
+	added := fmt.Sprintf("source " + config.ReadConfig().ExportPath)
 	for _, e := range lines {
-				if e == added {
-					return true, nil
-				}
+		if e == added {
+			return true, nil
+		}
 	}
 	return false, nil
 }
+
 //BoxMessage returns a string containing the given profile surrounded by a border comprised of *'s
 func BoxMessage(text string) string {
-	if len(text) == 0 {return ""}
+	if len(text) == 0 {
+		return ""
+	}
 	var buf []byte
 	b := bytes.NewBuffer(buf)
 	lines := strings.Split(text, "\n")
@@ -226,14 +227,16 @@ func BoxMessage(text string) string {
 			largest = len(chars)
 		}
 	}
-	for i := 0; i < largest + 5; i++ {b.Write([]byte("*"))}
+	for i := 0; i < largest+5; i++ {
+		b.Write([]byte("*"))
+	}
 	b.Write([]byte(" "))
 	for i, e := range lines {
 		chars := strings.Split(e, "")
-		if i == len(lines) - 1 {
-			b.Write([]byte(( "\n* " + e)))
-		}else{
-			b.Write([]byte(( "\n* " + e + "*")))
+		if i == len(lines)-1 {
+			b.Write([]byte(("\n* " + e)))
+		} else {
+			b.Write([]byte(("\n* " + e + "*")))
 		}
 		if len(chars) <= largest {
 			for j := len(chars); j < largest; j++ {
@@ -243,12 +246,11 @@ func BoxMessage(text string) string {
 		}
 	}
 	b.Write([]byte("\n"))
-	for i := 0; i < largest + 5; i ++ {
+	for i := 0; i < largest+5; i++ {
 		b.Write([]byte("*"))
 	}
 	return b.String()
 }
-
 
 //checkForFile checks if a file exists.
 //it assumes the working directory is the
