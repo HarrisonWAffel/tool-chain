@@ -23,6 +23,10 @@ a profile defined and the exports file linked within your `zshrc` or `bashrc`.
 
 `tool-chain profile activate profileName` will uncomment all exports contained within the profile, and comment out all other profiles. You must manually source your rc file for the changes to take effect. 
 
+`tool-chain profile list` will list all configured profiles.
+
+`tool-chain profile remove profileName` will remove the desired profile from the exports file if it exists.  
+
 
 #### Why does Tool-Chain ask for the path of my `zshrc`/`bashrc` file?
 In order to not interfere with the format of your `zshrc` or `bashrc`, and to make the management of profiles easier, a 
