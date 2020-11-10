@@ -34,7 +34,9 @@ func AddProfile(profileName string, properties map[string]string, isFirstProfile
 		fmt.Println(e)
 		return e
 	}
-	return UpdateConfig(cnf)
+	cnf.CurrentProfile = profileName
+
+	return config.UpdateFile(cnf)
 }
 
 func ActivateProfile(profileName string, c []string) {
@@ -79,12 +81,15 @@ func ActivateProfile(profileName string, c []string) {
 		fmt.Println(e)
 		panic(e)
 	}
-	e = UpdateConfig(cnf)
+	cnf = config.ReadConfig()
+	cnf.CurrentProfile = profileName
+	e = config.UpdateFile(cnf)
 	if e != nil {
 		fmt.Println(e)
 		panic(e)
 	}
 }
+
 func DeleteProfile(profileName string, c []string) {
 	var err error
 	if c == nil {
@@ -131,9 +136,7 @@ func UpdateConfig(conf config.Config) error {
 		panic(e)
 	}
 	nc := config.Config{
-		conf.ExportPath,
-		"",
-		nil,
+		ExportPath: conf.ExportPath,
 	}
 	for _, e := range s {
 		if strings.Contains(e, strings.Split(Header(""), " ")[0]) {

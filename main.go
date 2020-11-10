@@ -19,8 +19,10 @@ func main() {
 	commands := []command{ //more commands can be added here
 		{Name: "profile", handler: func() {
 			l := len(os.Args)
-			if l < 3 {
+			if l <= 3 {
 				fmt.Println("usage: \n create a new profile: tool-chain profile new profileName \n activate a profile: tool-chain profile activate profileName\n list all profiles: tool-chain profile list")
+				fmt.Println("\n")
+				fmt.Printf("Current Profile: %s\n", config.ReadConfig().CurrentProfile)
 				return
 			}
 

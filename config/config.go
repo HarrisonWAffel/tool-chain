@@ -13,7 +13,8 @@ type Config struct {
 	ExportPath        string `json:"export_path"` //the path to the *rc file (bashrc, zshrc)
 	CurrentAWSProfile string `json:"current_aws_profile"`
 	//CurrentGCPProfile string `json:"current_gcp_profile"` //todo
-	ProfileNames []string `json:"profile_names"`
+	ProfileNames   []string `json:"profile_names"`
+	CurrentProfile string   `json:"current_profile"`
 }
 
 //UpdateFile updates the config.json file
