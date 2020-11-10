@@ -89,7 +89,35 @@ func ActivateProfile(profileName string, c []string) {
 		panic(e)
 	}
 }
+func GetProfileExports(profileName string) map[string]string {
+	c, err := ReadExportFile()
+	if err != nil {
+		panic(err)
+	}
+	triggered := false
+	props := make(map[string]string)
 
+	for _, t := range c {
+		if strings.Contains(t, Header(profileName)) {
+			triggered = true
+		}
+		if triggered && strings.Contains(t, Footer()) {
+			triggered = false
+			return props
+		}
+
+		if triggered {
+			if strings.Contains(t, "export") {
+				chars := strings.Split(t, "=")
+				if len(chars) == 2 {
+					props[chars[0]] = chars[1]
+				}
+			}
+		}
+	}
+
+	return props
+}
 func DeleteProfile(profileName string, c []string) {
 	var err error
 	if c == nil {

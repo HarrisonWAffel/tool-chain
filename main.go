@@ -22,7 +22,13 @@ func main() {
 			if l <= 3 {
 				fmt.Println("usage: \n create a new profile: tool-chain profile new profileName \n activate a profile: tool-chain profile activate profileName\n list all profiles: tool-chain profile list")
 				fmt.Println("\n")
-				fmt.Printf("Current Profile: %s\n", config.ReadConfig().CurrentProfile)
+				pro := config.ReadConfig().CurrentProfile
+				fmt.Printf("Current Profile: %s\n", pro)
+				x := profile.GetProfileExports(pro)
+				fmt.Println("Current Exports:")
+				for k, v := range x {
+					fmt.Printf("%s = %s\n", k, v)
+				}
 				return
 			}
 
