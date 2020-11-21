@@ -7,6 +7,7 @@ import (
 	"github.com/HarrisonWAffel/tool-chain/profile"
 	"github.com/HarrisonWAffel/tool-chain/setup"
 	"os"
+	"strings"
 )
 
 type command struct {
@@ -117,6 +118,15 @@ func printProfileUsage() {
 	x := profile.GetProfileExports(pro)
 	fmt.Println("Current Exports:")
 	for k, v := range x {
-		fmt.Printf("%s = %s\n", k, v)
+		if strings.Contains(k, "ACCESS") || strings.Contains(k, "SECRET") {
+			c := strings.Split(v, "")
+			shown := c[len(c)-4:]
+			var end []string
+			end = append(end, strings.Repeat("*", len(c)-4))
+			end = append(end, strings.Join(shown, ""))
+			fmt.Printf("%s = %s\n", k, strings.Join(end, ""))
+		} else {
+			fmt.Printf("%s = %s\n", k, v)
+		}
 	}
 }
