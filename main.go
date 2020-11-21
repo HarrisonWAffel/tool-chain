@@ -108,15 +108,18 @@ func printNetUsage() {
 }
 
 func printProfileUsage() {
+	fmt.Println()
+
 	fmt.Println("usage: \n create a new profile: tool-chain profile new profileName " +
 		"\n activate a profile: tool-chain profile activate profileName" +
-		"\n list all profiles: tool-chain profile list")
+		"\n list all profiles: tool-chain profile list all")
 
-	fmt.Println("\n")
+	fmt.Println()
 	pro := config.ReadConfig().CurrentProfile
 	fmt.Printf("Current Profile: %s\n", pro)
+	fmt.Println()
 	x := profile.GetProfileExports(pro)
-	fmt.Println("Current Exports:")
+	fmt.Println("Current Profile Exports:")
 	for k, v := range x {
 		if strings.Contains(k, "ACCESS") || strings.Contains(k, "SECRET") {
 			c := strings.Split(v, "")
@@ -129,4 +132,7 @@ func printProfileUsage() {
 			fmt.Printf("%s = %s\n", k, v)
 		}
 	}
+	fmt.Println()
+	fmt.Println()
+
 }
