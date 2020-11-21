@@ -15,6 +15,7 @@ type Config struct {
 	//CurrentGCPProfile string `json:"current_gcp_profile"` //todo
 	ProfileNames   []string `json:"profile_names"`
 	CurrentProfile string   `json:"current_profile"`
+	Subnet         string   `json:"subnet"`
 }
 
 //UpdateFile updates the config.json file
