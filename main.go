@@ -17,6 +17,11 @@ type command struct {
 func main() {
 	setup.EnsureBaseConfiguration()
 	argCount := len(os.Args)
+	if argCount == 1 {
+		fmt.Println(setup.BoxMessage("       Command Line Tool-Chain.     \n                                    \n The below commands are available: " +
+			" \nprofile: manage environment profiles\nnet: networking tools\nExample: 'tool-chain profile new'"))
+		return
+	}
 	commands := []command{ //more commands can be added here
 		{Name: "profile", handler: func() {
 			l := len(os.Args)
@@ -94,8 +99,6 @@ func main() {
 				break
 			}
 		}
-	} else {
-		fmt.Println(setup.BoxMessage("       Command Line Tool-Chain.     \n                                    \n The below commands are available:  \nprofile: manage environment profiles"))
 	}
 }
 
