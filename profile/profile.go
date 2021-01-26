@@ -66,7 +66,6 @@ func ActivateProfile(profileName string, c []string) {
 					newset = append(newset, t)
 				}
 			}
-
 		}
 		if !triggered {
 			if strings.Contains(t, "#") {
