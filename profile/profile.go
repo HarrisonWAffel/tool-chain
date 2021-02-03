@@ -39,43 +39,47 @@ func AddProfile(profileName string, properties map[string]string, isFirstProfile
 	return config.UpdateFile(cnf)
 }
 
-func ActivateProfile(profileName string, c []string) {
+//ActivateProfile - responsible for uncommenting the specified profile
+//within the exports file and commenting any other active profile.
+//profileName string, the profile to be activated
+//
+//configurationFile []string, the exports file separated by line. Passing nil for this parameter will result in a lookup and read of the exports file.
+func ActivateProfile(profileName string, configurationFile []string) {
 	var err error
-	if c == nil {
-		c, err = ReadExportFile()
+	if configurationFile == nil {
+		configurationFile, err = ReadExportFile()
 		if err != nil {
 			panic(err)
 		}
 	}
 	triggered := false
-	var newset []string
-	for _, t := range c {
-		if strings.Contains(t, Header(profileName)) {
+	var newConfiguration []string
+	for _, configProperty := range configurationFile {
+		if strings.Contains(configProperty, Header(profileName)) {
 			triggered = true
 		}
-		if strings.Contains(t, Footer()) {
+		if strings.Contains(configProperty, Footer()) {
 			triggered = false
 		}
 
 		if triggered {
-			chars := strings.Split(t, "")
+			chars := strings.Split(configProperty, "")
 			if len(chars) > 0 {
-				if chars[0] == "#" && (!strings.Contains(t, Footer()) && !strings.Contains(t, Header(profileName))) {
-					newset = append(newset, strings.ReplaceAll(t, "#", ""))
+				if chars[0] == "#" && (!strings.Contains(configProperty, Footer()) && !strings.Contains(configProperty, Header(profileName))) {
+					newConfiguration = append(newConfiguration, strings.ReplaceAll(configProperty, "#", ""))
 				} else {
-					newset = append(newset, t)
+					newConfiguration = append(newConfiguration, configProperty)
 				}
 			}
-		}
-		if !triggered {
-			if strings.Contains(t, "#") {
-				newset = append(newset, t)
+		} else {
+			if strings.Contains(configProperty, "#") {
+				newConfiguration = append(newConfiguration, configProperty)
 			} else {
-				newset = append(newset, "#"+t)
+				newConfiguration = append(newConfiguration, "#"+configProperty)
 			}
 		}
 	}
-	e := SaveExportFile(newset, false)
+	e := SaveExportFile(newConfiguration, false)
 	if e != nil {
 		fmt.Println(e)
 		panic(e)

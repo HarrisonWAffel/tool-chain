@@ -62,6 +62,7 @@ var Profile = types.Command{Name: "profile", Handler: func() {
 
 	case "activate":
 		profile.ActivateProfile(os.Args[3], nil)
+		fmt.Printf("Profile %s has been activated! Please source your rc file (bashrc, zshrc, etc) to apply the changes.", os.Args[3])
 
 	case "remove":
 		for _, e := range config.ReadConfig().ProfileNames {
