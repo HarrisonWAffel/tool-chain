@@ -27,6 +27,8 @@ a profile defined and the exports file linked within your `zshrc` or `bashrc`.
 
 `tool-chain profile remove profileName` will remove the desired profile from the exports file if it exists.  
 
+`tool-chain net scan` will print the IP address and hostname of all hosts on the provided subnet, so long as it is accessible. 
+
 
 #### Why does Tool-Chain ask for the path of my `zshrc`/`bashrc` file?
 In order to not interfere with the format of your `zshrc` or `bashrc`, and to make the management of profiles easier, a 
